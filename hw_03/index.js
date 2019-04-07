@@ -11,7 +11,7 @@
  */
 function isTimeValid(hours, minutes) {
     return hours <= 23 && hours >= 0 &&
-        minutes <= 59 && hours >= 0;
+        minutes <= 59 && minutes >= 0;
 }
 
 console.log("Task #1");
@@ -87,28 +87,24 @@ console.log(getSeason(1) + getSeason(5) + getSeason(7) + getSeason(10));
  * getDayDeclension(7); должна вернуть строку со значением Дней
  */
 function getDayDeclension(number) {
-    lastDigit = number % 10;
-    switch (lastDigit) {
-        case 1:
-            return "День";
-        case 2:
-        case 3:
-        case 4:
-            return "Дня";
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 0:
-            return "Дней";
+    var lastDigit = number % 10;
+    var beforeLastDigit = (number + "").slice(-2, -1);
+    console.log("beforeLastDigit" + beforeLastDigit);
+
+    if (beforeLastDigit == 1 || lastDigit == 0 || (lastDigit >= 5 && lastDigit <= 9)) {
+        return "Дней"
+    } else if (lastDigit >= 2 && lastDigit <= 4) {
+        return "Дня";
+    } else if (lastDigit == 1) {
+        return "День";
     }
 }
 
 console.log("Task #4");
 console.log(1 + getDayDeclension(1));
-console.log(3 + getDayDeclension(3));
-console.log(9 + getDayDeclension(9));
+console.log(15 + getDayDeclension(15));
+console.log(22 + getDayDeclension(22));
+console.log(99 + getDayDeclension(99));
 
 
 /**
