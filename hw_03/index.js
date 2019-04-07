@@ -89,7 +89,6 @@ console.log(getSeason(1) + getSeason(5) + getSeason(7) + getSeason(10));
 function getDayDeclension(number) {
     var lastDigit = number % 10;
     var beforeLastDigit = (number + "").slice(-2, -1);
-    console.log("beforeLastDigit" + beforeLastDigit);
 
     if (beforeLastDigit == 1 || lastDigit == 0 || (lastDigit >= 5 && lastDigit <= 9)) {
         return "Дней"
