@@ -190,11 +190,11 @@ console.log("Не попадает " + isPointInsideRadius(15, 44))
  */
 function isPointInsideShape(x, y) {
     //ниже прямых
-    l1 = -0.6 * x + 3 - y > 0;
-    l2 = 4 / 7 * (x + 7) - y > 0;
+    l1 = -0.6 * x + 3 - y >= 0;
+    l2 = 4 / 7 * (x + 7) - y >= 0;
     //выше прямых
-    l3 = -1.5 * (x + 8) - y < 0;
-    l4 = 0.4 * x - y - 2 < 0;
+    l3 = -1.5 * (x + 8) - y <= 0;
+    l4 = 0.4 * x - y - 2 <= 0;
 
     return l1 && l2 && l3 && l4;
 }
