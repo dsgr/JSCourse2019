@@ -7,7 +7,7 @@ getWords(‘Прохожу курс в компнии #intexsoft по #javascrip
 должна вернуть [‘intexsoft’, ’ javascript’];
 */
 function getWords(input) {
-    return input.split("#")
+    return input.split(/^#|[^#]#/g)
         .slice(1)
         .map(
             function (item, i, arr) {
@@ -20,7 +20,11 @@ console.log("Task #1");
 console.log(
     getWords("Прохожу курс в компнии #intexsoft по #javascript")
 );
-
+//Строка "#react intexsoft javascript html ##javascript, css #Intexsoft[]'-/"
+// Функция должна вывести хэштэги "react #javascript, Intexsoft[]'-/"
+console.log(
+    getWords("#react intexsoft javascript html ##javascript, css #Intexsoft[]")
+);
 
 /**
 2. Убрать повторяющиеся слова
@@ -143,7 +147,7 @@ function addressBook(command) {
                     return item.phones.length > 0;
                 })
                 .map(function (item, pos, arr) {
-                    return item.name + ": " + item.phones.join(", ") + ";";
+                    return item.name + ": " + item.phones.join(", ");
 
                 })
             break;
@@ -172,6 +176,8 @@ function addressBook(command) {
 console.log("Task #3");
 addressBook("ADD Ivan 555-10-01,555-10-03");
 addressBook("ADD Ivan 555-10-02");
+console.info(addressBook("SHOW"));
+
 addressBook("REMOVE_PHONE 555-10-01");
 addressBook("ADD Alex 555-20-03");
 console.log(phoneBook);

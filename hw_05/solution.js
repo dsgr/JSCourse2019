@@ -5,7 +5,7 @@ var phoneBook = [];
 
 module.exports = {
     getWords: function (input) {
-        return input.split("#")
+        return input.split(/^#|[^#]#/g)
             .slice(1)
             .map(
                 function (item, i, arr) {
@@ -22,7 +22,7 @@ module.exports = {
                 return arr.indexOf(item) === i;;
             })
             .join(", ");
-    
+
     },
     addressBook: function (command) {
         var comandAction = command.split(" ")[0];
@@ -48,7 +48,7 @@ module.exports = {
                     });
                 }
                 break;
-    
+
             case "SHOW":
                 phoneBook.sort(function (a, b) {
                     if (a.name < b.name)
@@ -57,24 +57,24 @@ module.exports = {
                         return 1;
                     return 0;
                 });
-    
+
                 return phoneBook
                     .filter(function (item, pos, arr) {
                         return item.phones.length > 0;
                     })
                     .map(function (item, pos, arr) {
-                        return item.name + ": " + item.phones.join(", ") + ";";
-    
+                        return item.name + ": " + item.phones.join(", ");
+
                     })
                 break;
-    
+
             case "REMOVE_PHONE":
                 var removePhone = command.split(" ")[1];
                 if (phoneBook.every(function (item, pos, arr) {
                     item.phones.indexOf(removePhone) === -1;
                 })) {
                     return false;
-    
+
                 } else {
                     return phoneBook.some(
                         function (item, pos, arr) {
@@ -87,5 +87,5 @@ module.exports = {
                 }
                 break;
         }
-    }    
+    }
 }
