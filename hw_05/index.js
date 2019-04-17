@@ -162,8 +162,9 @@ function addressBook(command) {
             } else {
                 return phoneBook.some(
                     function (item, pos, arr) {
-                        if (item.phones.indexOf(removePhone) != -1) {
-                            item.phones.splice(pos, 1);
+                        if (item.phones.indexOf(removePhone) !== -1) {
+                            var removePhonePos = item.phones.indexOf(removePhone);
+                            item.phones.splice(removePhonePos, 1);
                             return true;
                         }
                     }
@@ -176,9 +177,6 @@ function addressBook(command) {
 console.log("Task #3");
 addressBook("ADD Ivan 555-10-01,555-10-03");
 addressBook("ADD Ivan 555-10-02");
-console.info(addressBook("SHOW"));
+addressBook("REMOVE_PHONE 555-10-03");
 
-addressBook("REMOVE_PHONE 555-10-01");
-addressBook("ADD Alex 555-20-03");
-console.log(phoneBook);
 console.log(addressBook("SHOW"));
