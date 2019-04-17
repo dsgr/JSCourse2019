@@ -48,7 +48,7 @@ module.exports = {
                     });
                 }
                 break;
-
+            
             case "SHOW":
                 phoneBook.sort(function (a, b) {
                     if (a.name < b.name)
@@ -57,29 +57,30 @@ module.exports = {
                         return 1;
                     return 0;
                 });
-
+            
                 return phoneBook
                     .filter(function (item, pos, arr) {
                         return item.phones.length > 0;
                     })
                     .map(function (item, pos, arr) {
                         return item.name + ": " + item.phones.join(", ");
-
+                    
                     })
                 break;
-
+                
             case "REMOVE_PHONE":
                 var removePhone = command.split(" ")[1];
                 if (phoneBook.every(function (item, pos, arr) {
                     item.phones.indexOf(removePhone) === -1;
                 })) {
                     return false;
-
+                
                 } else {
                     return phoneBook.some(
                         function (item, pos, arr) {
-                            if (item.phones.indexOf(removePhone) != -1) {
-                                item.phones.splice(pos, 1);
+                            if (item.phones.indexOf(removePhone) !== -1) {
+                                var removePhonePos = item.phones.indexOf(removePhone);
+                                item.phones.splice(removePhonePos, 1);
                                 return true;
                             }
                         }
