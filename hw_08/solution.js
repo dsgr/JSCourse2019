@@ -1,91 +1,84 @@
-//Подсказка: сюда можно складывать записи адресной книги.
-var phoneBook = [];
+function query(collection) {
 
-//Здесь можно объявить переменные и функции, которые понядобятся вам для работы ваших функций
+}
+
+function select() {
+
+}
+
+function filterIn(property, values) {
+
+}
 
 module.exports = {
-    getWords: function (input) {
-        return input.split(/^#|[^#]#/g)
-            .slice(1)
-            .map(
-                function (item, i, arr) {
-                    return item.split(" ")[0]
+    timeShift: function(date) {
+        return {
+            date: new Date(inDate),
+    
+            toString: function () {
+                return this.date.getFullYear() + '-' +
+                    ("00" + (this.date.getMonth() + 1)).slice(-2) + '-' +
+                    ("00" + this.date.getDate()).slice(-2) + ' ' +
+    
+                    ("00" + this.date.getHours()).slice(-2) + ':' +
+                    ("00" + this.date.getMinutes()).slice(-2);
+            },
+            
+            add: function (num, unit) {
+                switch (unit) {
+                    case 'minutes':
+                        this.date.setMinutes(this.date.getMinutes() + num);
+                        this.value = this.toString();
+    
+                        return this;
+                    case 'hours':
+                        this.date.setHours(this.date.getHours() + num);
+                        this.value = this.toString();
+                        return this;
+                    case 'days':
+                        this.date.setDate(this.date.getDate() + num);
+                        this.value = this.toString();
+                        return this;
+                    case 'months':
+                        this.date.setMonths(this.date.getMonths() + num);
+                        this.value = this.toString();
+                        return this;
+                    case 'years':
+                        this.value = this.date.toISOString().slice(0, 16).replace("T", " ");
+                        this.value = this.toString();
+                        return this;
                 }
-            )
-    },
-    normalizeWords: function (inWords) {
-        return inWords
-            .map(function (item, i, arr) {
-                return item.toLowerCase();
-            })
-            .filter(function (item, i, arr) {
-                return arr.indexOf(item) === i;;
-            })
-            .join(", ");
-
-    },
-    addressBook: function (command) {
-        var comandAction = command.split(" ")[0];
-        switch (comandAction) {
-            case "ADD":
-                var comandName = command.split(" ")[1];
-                var comandPhones = command.split(" ")[2];
-                if (phoneBook.some(function (item, pos, arr) {
-                    return item.name === comandName;
-                })) { //если имя уже записано
-                    var arrPos;
-                    phoneBook.some(function (item, pos, arr) {
-                        if (item.name === comandName) {
-                            arrPos = pos;
-                            return true;
-                        }
-                    })
-                    phoneBook[arrPos].phones = phoneBook[arrPos].phones.concat(comandPhones.split(","));
-                } else {
-                    phoneBook.push({
-                        name: comandName,
-                        phones: comandPhones.split(",")
-                    });
+            },
+    
+            subtrack: function (num, unit) {
+                switch (unit) {
+                    case 'minutes':
+                        this.date.setMinutes(this.date.getMinutes() - num);
+                        this.value = this.toString();
+                        return this;
+                    case 'hours':
+                        this.date.setHours(this.date.getHours() - num);
+                        this.value = this.toString();
+                        return this;
+                    case 'days':
+                        this.date.setDate(this.date.getDate() - num);
+                        this.value = this.toString();
+                        return this;
+                    case 'months':
+                        this.date.setMonths(this.date.getMonths() - num);
+                        this.value = this.toString();
+                        return this;
+                    case 'years':
+                        this.date.setYears(this.date.getYears() - num);
+                        this.value = this.toString();
+                        return this;
                 }
-                break;
-
-            case "SHOW":
-                phoneBook.sort(function (a, b) {
-                    if (a.name < b.name)
-                        return -1;
-                    if (a.name > b.name)
-                        return 1;
-                    return 0;
-                });
-
-                return phoneBook
-                    .filter(function (item, pos, arr) {
-                        return item.phones.length > 0;
-                    })
-                    .map(function (item, pos, arr) {
-                        return item.name + ": " + item.phones.join(", ");
-
-                    })
-                break;
-
-            case "REMOVE_PHONE":
-                var removePhone = command.split(" ")[1];
-                if (phoneBook.every(function (item, pos, arr) {
-                    item.phones.indexOf(removePhone) === -1;
-                })) {
-                    return false;
-
-                } else {
-                    return phoneBook.some(
-                        function (item, pos, arr) {
-                            if (item.phones.indexOf(removePhone) != -1) {
-                                item.phones.splice(pos, 1);
-                                return true;
-                            }
-                        }
-                    );
-                }
-                break;
+            }
         }
-    }
-}
+    },
+    lib: {
+        query: query,
+        select: select,
+        filterIn: filterIn
+    }    
+};
