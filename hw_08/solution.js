@@ -1,35 +1,73 @@
-function query(collection) {
-
+function query() {
+    var argsArr = [].slice.call(arguments);
+    var currArray = arguments[0];
+    for (i = 1; i < argsArr.length; i++) {
+        currArray = argsArr[i](currArray);
+    }
+    return currArray;
 }
 
 function select() {
-
+    var argsArr = [].slice.call(arguments);
+    return function (inArr) {
+        var outArr = [];
+        inArr.forEach(function (objItem, i, arr) {
+            var outObj = {};
+            argsArr.forEach(function (argItem, i, arr) {
+                outObj[argItem] = objItem[argItem];
+            });
+            outArr.push(outObj);
+        });
+        return outArr;
+    }
 }
 
-function filterIn(property, values) {
+function filterIn() {
+    var argsArr = [].slice.call(arguments);
+    return function (inArr) {
+        outArr = []
+        inArr.forEach(function (objItem) {
+            var isSuccessCheck = false;
+            for (i = 0; i < argsArr.length; i = i + 2) {
+                var fieldName = argsArr[i];
+                var acceptedValues = argsArr[i + 1];
 
+                isSuccessCheck = acceptedValues.some(
+                    function (value) { return value == objItem[fieldName] }
+                );
+                if (!isSuccessCheck) {
+                    break;
+                }
+            }
+
+            if (isSuccessCheck) {
+                outArr.push(objItem)
+            }
+        });
+        return outArr;
+    }
 }
 
 module.exports = {
-    timeShift: function(date) {
+    timeShift: function (date) {
         return {
             date: new Date(inDate),
-    
+
             toString: function () {
                 return this.date.getFullYear() + '-' +
                     ("00" + (this.date.getMonth() + 1)).slice(-2) + '-' +
                     ("00" + this.date.getDate()).slice(-2) + ' ' +
-    
+
                     ("00" + this.date.getHours()).slice(-2) + ':' +
                     ("00" + this.date.getMinutes()).slice(-2);
             },
-            
+
             add: function (num, unit) {
                 switch (unit) {
                     case 'minutes':
                         this.date.setMinutes(this.date.getMinutes() + num);
                         this.value = this.toString();
-    
+
                         return this;
                     case 'hours':
                         this.date.setHours(this.date.getHours() + num);
@@ -49,7 +87,7 @@ module.exports = {
                         return this;
                 }
             },
-    
+
             subtrack: function (num, unit) {
                 switch (unit) {
                     case 'minutes':
@@ -80,5 +118,5 @@ module.exports = {
         query: query,
         select: select,
         filterIn: filterIn
-    }    
+    }
 };
