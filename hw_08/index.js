@@ -195,21 +195,25 @@ var friends = [
  */
 function select() {
     var argsArr = [].slice.call(arguments);
-    return function (inArr) {
-        var outArr = [];
-        inArr.forEach(function (objItem, i, arr) {
-            var outObj = {};
-            argsArr.forEach(function (argItem, i, arr) {
-                outObj[argItem] = objItem[argItem];
+    return {
+        name: 'select',
+        action: function (inArr) {
+            var outArr = [];
+            inArr.forEach(function (objItem, i, arr) {
+                var outObj = {};
+                argsArr.forEach(function (argItem, i, arr) {
+                    outObj[argItem] = objItem[argItem];
+                });
+                outArr.push(outObj);
             });
-            outArr.push(outObj);
-        });
-        return outArr;
+            return outArr;
+        }
     }
+
 }
 
 console.log(
-    select('name', 'email')(friends)
+    select('name', 'email').action(friends)
 );
 
 
@@ -220,32 +224,35 @@ console.log(
  */
 function filterIn() {
     var argsArr = [].slice.call(arguments);
-    return function (inArr) {
-        outArr = []
-        inArr.forEach(function (objItem) {
-            var isSuccessCheck = false;
-            for (i = 0; i < argsArr.length; i = i + 2) {
-                var fieldName = argsArr[i];
-                var acceptedValues = argsArr[i + 1];
+    return {
+        name: 'filterIn',
+        action: function (inArr) {
+            outArr = []
+            inArr.forEach(function (objItem) {
+                var isSuccessCheck = false;
+                for (i = 0; i < argsArr.length; i = i + 2) {
+                    var fieldName = argsArr[i];
+                    var acceptedValues = argsArr[i + 1];
 
-                isSuccessCheck = acceptedValues.some(
-                    function (value) { return value == objItem[fieldName] }
-                );
-                if (!isSuccessCheck) {
-                    break;
+                    isSuccessCheck = acceptedValues.some(
+                        function (value) { return value == objItem[fieldName] }
+                    );
+                    if (!isSuccessCheck) {
+                        break;
+                    }
                 }
-            }
 
-            if (isSuccessCheck) {
-                outArr.push(objItem)
-            }
-        });
-        return outArr;
+                if (isSuccessCheck) {
+                    outArr.push(objItem)
+                }
+            });
+            return outArr;
+        }
     }
 }
 
 console.log(
-    filterIn('name', ['Сэм'])(friends)
+    filterIn('name', ['Сэм']).action(friends)
 );
 
 
@@ -259,8 +266,17 @@ lib.query(collection, operation1, operation2, ...)
 function query() {
     var argsArr = [].slice.call(arguments);
     var currArray = arguments[0];
+
     for (i = 1; i < argsArr.length; i++) {
-        currArray = argsArr[i](currArray);
+        if (argsArr[i].name == 'filterIn') {
+            currArray = argsArr[i].action(currArray);
+        }
+    }
+
+    for (i = 1; i < argsArr.length; i++) {
+        if (argsArr[i].name == 'select') {
+            currArray = argsArr[i].action(currArray);
+        }
     }
     return currArray;
 }
@@ -269,8 +285,8 @@ console.log('Task #2')
 console.log(
     query(
         friends,
-        select('name'),
-        filterIn('name', ['Сэм'])
+        filterIn('name', ['Сэм']),
+        select('name')
     )
 );
 
